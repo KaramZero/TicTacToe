@@ -54,17 +54,4 @@ class WithFriendGameViewModel : WithPcGameViewModel() {
         }
     }
 
-    private fun getMyMove(view: View): Move {
-        val move = Move()
-        for (i in 0..2) {
-            for (j in 0..2)
-                if (xo[i][j] == view) {
-                    move.row = i
-                    move.col = j
-                }
-        }
-        return move
-    }
-
-
 }

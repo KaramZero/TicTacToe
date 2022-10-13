@@ -22,8 +22,7 @@ class LevelsSelectionCustomDialog(context: Context, private val selectedLevel:Mu
         binding = LevelsDialogBinding.inflate(layoutInflater)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(binding.root)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.easyImageView.setOnClickListener(this)
         binding.normalImageView.setOnClickListener(this)

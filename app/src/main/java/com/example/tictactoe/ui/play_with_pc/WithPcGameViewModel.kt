@@ -123,7 +123,7 @@ open class WithPcGameViewModel : ViewModel() {
         }
     }
 
-    private fun getMyMove(view: View): Move {
+    protected fun getMyMove(view: View): Move {
         val move = Move()
         for (i in 0..2) {
             for (j in 0..2)

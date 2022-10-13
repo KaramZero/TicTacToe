@@ -24,6 +24,13 @@
             app:exitAnim="@anim/slide_out_down"
             app:popEnterAnim="@anim/slide_in_up"
             app:popExitAnim="@anim/slide_out_down" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_onlineFragment"
+            app:destination="@id/onlineFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/slide_out_down"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_down" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
@@ -60,6 +67,39 @@
             app:popUpTo="@id/navigation" />
         <argument
             android:name="startChar"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/onlineFragment"
+        android:name="com.example.tictactoe.ui.play_online.online_home.OnlineFragment"
+        android:label="fragment_online"
+        tools:layout="@layout/fragment_online" >
+        <action
+            android:id="@+id/action_onlineFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/slide_out_down"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_down"
+            app:popUpTo="@id/navigation" />
+        <action
+            android:id="@+id/action_onlineFragment_to_onlineGameFragment"
+            app:destination="@id/onlineGameFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/slide_out_down"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/onlineGameFragment"
+        android:name="com.example.tictactoe.ui.play_online.online_game.OnlineGameFragment"
+        android:label="fragment_online_game"
+        tools:layout="@layout/fragment_online_game" >
+        <argument
+            android:name="friendId"
+            app:argType="string" />
+        <argument
+            android:name="playingChar"
             app:argType="string" />
     </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.tictactoe.ui.play_with_pc
+package com.example.tictactoe.ui.play_online.online_game
 
 import android.content.Context
 import android.os.Bundle
@@ -13,22 +13,22 @@ import com.example.tictactoe.R
 import com.example.tictactoe.databinding.FragmentWithPcGameBinding
 import com.example.tictactoe.game_logics.Music
 import com.example.tictactoe.model.GameState
-import com.example.tictactoe.model.GameState.*
 import com.example.tictactoe.ui.MyAnimator
-import com.example.tictactoe.ui.play_with_friend.WithFriendGameFragmentArgs
-import com.example.tictactoe.ui.play_with_friend.WithFriendGameFragmentDirections
+import com.example.tictactoe.ui.play_with_pc.WithPcGameFragmentArgs
+import com.example.tictactoe.ui.play_with_pc.WithPcGameFragmentDirections
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class WithPcGameFragment : Fragment() {
+class OnlineGameFragment : Fragment() {
 
-    private var _binding: FragmentWithPcGameBinding? = null
-    private val binding get() = _binding!!
 
     private val animator: MyAnimator by inject()
     private val music: Music by inject()
-    private val viewModel: WithPcGameViewModel by viewModel()
+    private val viewModel: OnlineGameFragmentViewModel by viewModel()
+
+    private var _binding: FragmentWithPcGameBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,55 +44,76 @@ class WithPcGameFragment : Fragment() {
         _binding = null
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.loadButtons(binding.playingBoard, onButtonClickedListener)
 
-        val args = WithFriendGameFragmentArgs.fromBundle(requireArguments())
-   //     viewModel.initiateMyChar(args.startChar)
+        val args = OnlineGameFragmentArgs.fromBundle(requireArguments())
+        viewModel.initiateMyChar(char = args.playingChar, friendId = args.friendId)
 
         var turn = "Your ${getString(R.string.turn)}"
         binding.nowTurnTextView.text = turn
+
+        if (args.playingChar == "O") {
+            binding.blockingLayout.visibility = View.VISIBLE
+            turn = "PC ${getString(R.string.turn)}"
+            binding.nowTurnTextView.text = turn
+        }
 
         binding.musicImageView.setOnClickListener {
             music.switchPlayingState(view = it)
         }
 
         viewModel.myMove.observe(viewLifecycleOwner) {
-            it.setImageResource(viewModel.myResourceID)
-            animator.animateScale(it)
-            turn = "${viewModel.pcChar}'s ${getString(R.string.turn)}"
-            binding.nowTurnTextView.text = turn
+
+            if (it != null) {
+                it.setImageResource(viewModel.myResourceID)
+                animator.animateScale(it)
+                binding.blockingLayout.visibility = View.VISIBLE
+                turn = "PC ${getString(R.string.turn)}"
+                binding.nowTurnTextView.text = turn
+                viewModel.clearFriendMove()
+            }
         }
 
         viewModel.pcMove.observe(viewLifecycleOwner) {
-            it.setImageResource(viewModel.pcResourceID)
-            animator.animateScale(it)
-            turn = "${viewModel.myChar}'s ${getString(R.string.turn)}"
-            binding.nowTurnTextView.text = turn
+            if (it != null) {
+                it.setImageResource(viewModel.pcResourceID)
+                animator.animateScale(it)
+                binding.blockingLayout.visibility = View.INVISIBLE
+                turn = "Your ${getString(R.string.turn)}"
+                binding.nowTurnTextView.text = turn
+                viewModel.clearFriendMove()
+            }
         }
 
         viewModel.win.observe(viewLifecycleOwner) {
-            handleGameState(gameState = it, view = view)
-        }
 
+            handleGameState(gameState = it, view = view)
+
+        }
 
     }
 
     private fun handleGameState(gameState: GameState?, view: View) {
         when (gameState) {
-            GameState.X_WIN -> Toast.makeText(requireContext(), "X wins", Toast.LENGTH_SHORT).show()
+            GameState.YOU_WIN -> Toast.makeText(requireContext(), "you win", Toast.LENGTH_SHORT)
+                .show()
 
-            GameState.O_WIN -> Toast.makeText(requireContext(), "O wins", Toast.LENGTH_SHORT).show()
+            GameState.YOU_LOSE -> Toast.makeText(requireContext(), "friend wins", Toast.LENGTH_SHORT)
+                .show()
 
             GameState.EVEN -> Toast.makeText(requireContext(), "It's Even", Toast.LENGTH_SHORT)
                 .show()
 
             else -> {}
+
         }
-        view.findNavController()
-            .navigate(WithFriendGameFragmentDirections.actionWithFriendGameFragmentToWelcomeFragment())
+        binding.blockingLayout.visibility = View.INVISIBLE
+        requireActivity().onBackPressed()
+
     }
 
     private val onButtonClickedListener = OnClickListener {
@@ -108,6 +129,4 @@ class WithPcGameFragment : Fragment() {
         super.onDetach()
         music.pause()
     }
-
-
 }

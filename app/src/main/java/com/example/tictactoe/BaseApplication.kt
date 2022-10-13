@@ -1,6 +1,7 @@
 package com.example.tictactoe
 
 import android.app.Application
+import com.example.tictactoe.di.adapterModule
 import com.example.tictactoe.di.appModule
 import com.example.tictactoe.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -16,7 +17,7 @@ class BaseApplication : Application() {
             // Reference Android context
             androidContext(this@BaseApplication)
             // Load modules
-            modules(appModule, viewModelModule)
+            modules(appModule, viewModelModule, adapterModule)
         }
     }
 }
