@@ -2,18 +2,22 @@ package com.example.tictactoe.ui.play_with_friend
 
 import android.view.View
 import android.widget.ImageView
+import com.example.tictactoe.game_logics.Music
 import com.example.tictactoe.game_logics.XOModel
 import com.example.tictactoe.model.GameState
 import com.example.tictactoe.model.Move
 import com.example.tictactoe.ui.play_with_pc.WithPcGameViewModel
 
-class WithFriendGameViewModel : WithPcGameViewModel() {
+class WithFriendGameViewModel(music: Music) : WithPcGameViewModel(music) {
 
-    private var myTurn = true
     private var myWinState = GameState.X_WIN
     private var pcWinState = GameState.O_WIN
 
     fun initiateMyChar(char: String) {
+        if (char == "O"){
+            myWinState = GameState.O_WIN
+            pcWinState = GameState.X_WIN
+        }
         initiateMyChar(char = char,1)
     }
 

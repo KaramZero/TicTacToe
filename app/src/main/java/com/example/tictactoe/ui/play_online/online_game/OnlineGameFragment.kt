@@ -1,6 +1,5 @@
 package com.example.tictactoe.ui.play_online.online_game
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.tictactoe.R
-import com.example.tictactoe.databinding.FragmentPlaynigGameBinding
-import com.example.tictactoe.game_logics.Music
+import com.example.tictactoe.databinding.FragmentPlayingGameBinding
 import com.example.tictactoe.model.GameState
 import com.example.tictactoe.ui.MyAnimator
 import org.koin.android.ext.android.inject
@@ -21,11 +19,13 @@ class OnlineGameFragment : Fragment() {
 
 
     private val animator: MyAnimator by inject()
-    private val music: Music by inject()
+
     private val viewModel: OnlineGameFragmentViewModel by viewModel()
     private var endOfGame = false
 
-    private var _binding: FragmentPlaynigGameBinding? = null
+    private var outState: Bundle? = null
+
+    private var _binding: FragmentPlayingGameBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,13 +33,17 @@ class OnlineGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentPlaynigGameBinding.inflate(inflater, container, false)
+        _binding = FragmentPlayingGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        viewModel.pcMove.removeObservers(viewLifecycleOwner)
+        viewModel.myMove.removeObservers(viewLifecycleOwner)
+        viewModel.win.removeObservers(viewLifecycleOwner)
         _binding = null
+
+        super.onDestroyView()
     }
 
 
@@ -49,63 +53,82 @@ class OnlineGameFragment : Fragment() {
         viewModel.loadButtons(binding.playingBoard, onButtonClickedListener)
 
         val args = OnlineGameFragmentArgs.fromBundle(requireArguments())
-        viewModel.initiateMyChar(char = args.playingChar, friendId = args.friendId)
 
-        var turn = getString(R.string.your_turn)
-        binding.nowTurnTextView.text = turn
+        var turn: String
 
-        if (args.playingChar == "O") {
-            binding.blockingLayout.visibility = View.VISIBLE
-            turn = getString(R.string.friend_turn)
-            binding.nowTurnTextView.text = turn
-        }
+        viewModel.setBackgroundResource(binding.musicImageView)
 
         binding.musicImageView.setOnClickListener {
-            music.switchPlayingState(view = it)
+            viewModel.switchPlayingState(view = it)
         }
 
         viewModel.myMove.observe(viewLifecycleOwner) {
-
             if (it != null) {
                 it.setImageResource(viewModel.myResourceID)
                 animator.animateScale(it)
-                binding.blockingLayout.visibility = View.VISIBLE
-                turn = getString(R.string.friend_turn)
-                binding.nowTurnTextView.text = turn
-                viewModel.clearMyMove()
             }
+            binding.blockingLayout.visibility = View.VISIBLE
+            turn = getString(R.string.friend_turn)
+            binding.nowTurnTextView.text = turn
         }
 
         viewModel.pcMove.observe(viewLifecycleOwner) {
             if (it != null) {
                 it.setImageResource(viewModel.pcResourceID)
                 animator.animateScale(it)
-                binding.blockingLayout.visibility = View.INVISIBLE
-                turn = getString(R.string.your_turn)
-                binding.nowTurnTextView.text = turn
-                viewModel.clearFriendMove()
             }
+            binding.blockingLayout.visibility = View.INVISIBLE
+            turn = getString(R.string.your_turn)
+            binding.nowTurnTextView.text = turn
         }
 
         viewModel.win.observe(viewLifecycleOwner) {
-
             handleGameState(gameState = it)
+        }
 
+        if (savedInstanceState != null) {
+            viewModel.reDraw()
+        } else {
+            viewModel.initiateMyChar(args.playingChar, args.friendId)
+            turn = getString(R.string.your_turn)
+            binding.nowTurnTextView.text = turn
+
+            if (args.playingChar == "O") {
+                binding.blockingLayout.visibility = View.VISIBLE
+                turn = getString(R.string.friend_turn)
+                binding.nowTurnTextView.text = turn
+            }
         }
 
     }
 
     private fun handleGameState(gameState: GameState?) {
         when (gameState) {
-            GameState.YOU_WIN -> Toast.makeText(requireContext(), getString(R.string.you_win), Toast.LENGTH_SHORT)
+            GameState.YOU_WIN -> Toast.makeText(
+                requireContext(),
+                getString(R.string.you_win),
+                Toast.LENGTH_SHORT
+            )
                 .show()
 
-            GameState.YOU_LOSE -> Toast.makeText(requireContext(), getString(R.string.friend_wins), Toast.LENGTH_SHORT)
+            GameState.YOU_LOSE -> Toast.makeText(
+                requireContext(),
+                getString(R.string.friend_wins),
+                Toast.LENGTH_SHORT
+            )
                 .show()
 
-            GameState.EVEN -> Toast.makeText(requireContext(), getString(R.string.even), Toast.LENGTH_SHORT)
+            GameState.EVEN -> Toast.makeText(
+                requireContext(),
+                getString(R.string.even),
+                Toast.LENGTH_SHORT
+            )
                 .show()
-            GameState.FRIEND_QUITS -> Toast.makeText(requireContext(), getString(R.string.friend_quits), Toast.LENGTH_SHORT)
+            GameState.FRIEND_QUITS -> Toast.makeText(
+                requireContext(),
+                getString(R.string.friend_quits),
+                Toast.LENGTH_SHORT
+            )
                 .show()
 
             else -> {}
@@ -121,15 +144,15 @@ class OnlineGameFragment : Fragment() {
     }
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        music.start()
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        this.outState = outState
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDetach() {
         super.onDetach()
-        music.pause()
-        if (!endOfGame)
+        if (!endOfGame && outState == null)
             viewModel.quit()
     }
 }

@@ -79,12 +79,8 @@ class OnlineFragment : Fragment(), OnlineFragmentCommunicator {
                 viewModel.clearLiveData()
             }
             if (it.whoAccepted != "null") {
-                view.findNavController().navigate(
-                    OnlineFragmentDirections.actionOnlineFragmentToOnlineGameFragment(
-                        it.whoAccepted,
-                        "X"
-                    )
-                )
+                incomingInvitationId = it.whoAccepted
+                navigateToOnlineGameFragment(view,"X")
                 viewModel.clearLiveData()
             }
         }
@@ -93,12 +89,7 @@ class OnlineFragment : Fragment(), OnlineFragmentCommunicator {
             when (it) {
                 OK -> {
                     viewModel.acceptUserInvitation(incomingInvitationId)
-                    view.findNavController().navigate(
-                        OnlineFragmentDirections.actionOnlineFragmentToOnlineGameFragment(
-                            incomingInvitationId,
-                            "O"
-                        )
-                    )
+                    navigateToOnlineGameFragment(view, "O")
                     invitationResponse.postValue(null)
                 }
                 CANCEL -> {
@@ -107,6 +98,15 @@ class OnlineFragment : Fragment(), OnlineFragmentCommunicator {
                 null -> {}
             }
         }
+    }
+
+    private fun navigateToOnlineGameFragment(view: View, playingChar: String) {
+        view.findNavController().navigate(
+            OnlineFragmentDirections.actionOnlineFragmentToOnlineGameFragment(
+                incomingInvitationId,
+                playingChar
+            )
+        )
     }
 
     override fun onPause() {

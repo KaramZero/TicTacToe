@@ -2,6 +2,7 @@ package com.example.tictactoe.ui.play_online.online_game
 
 import android.view.View
 import android.widget.ImageView
+import com.example.tictactoe.game_logics.Music
 import com.example.tictactoe.game_logics.XOModel
 import com.example.tictactoe.model.GameState
 import com.example.tictactoe.model.Move
@@ -11,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 
-class OnlineGameFragmentViewModel : WithPcGameViewModel() {
+class OnlineGameFragmentViewModel(music: Music) : WithPcGameViewModel(music) {
 
     private var user: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
     private var db: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -25,6 +26,7 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
     fun initiateMyChar(char: String, friendId: String) {
         this.friendId = friendId
         initiateMyChar(char = char, 1)
+        if (char == "O") myTurn = false
         listenToMyRecordChanges()
     }
 
@@ -33,6 +35,7 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
         if (myBoard[myMove.row][myMove.col] == '_') {
             moveMe(view, myMove)
             sendMove(myMove)
+            myTurn = false
         }
     }
 
@@ -72,6 +75,7 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
                             } else if (!XOModel.isThereAPlaceToPlay(myBoard)) {
                                 _win.postValue(GameState.EVEN)
                             }
+                            myTurn = true
                         }
 
                         db.getReference("userData/${user.uid}").child(UserData.INCOMING_MOVE).setValue("null")
@@ -89,12 +93,7 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
         db.getReference("userData/$friendId").child(UserData.INCOMING_MOVE)
             .setValue("5 5")
     }
-    fun clearMyMove(){
-        _myMove.postValue(null)
-    }
-    fun clearFriendMove(){
-        _pcMove.postValue(null)
-    }
+
     override fun onCleared() {
         super.onCleared()
         myRef.removeEventListener(userRecordValueEventListener)

@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import android.view.View
 import com.example.tictactoe.R
 
-class Music constructor(private val context: Context) {
+class Music constructor(context: Context) {
 
     private var mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.sound)
 
@@ -24,6 +24,14 @@ class Music constructor(private val context: Context) {
         } else {
             view.setBackgroundResource(R.drawable.unmute)
             mediaPlayer.start()
+        }
+    }
+
+    fun setBackgroundResource(view: View){
+        if (mediaPlayer.isPlaying) {
+            view.setBackgroundResource(R.drawable.unmute)
+        } else {
+            view.setBackgroundResource(R.drawable.mute)
         }
     }
 
