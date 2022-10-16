@@ -36,7 +36,7 @@
         android:id="@+id/gameFragment"
         android:name="com.example.tictactoe.ui.play_with_pc.WithPcGameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_with_pc_game" >
+        tools:layout="@layout/fragment_playnig_game" >
         <argument
             android:name="startChar"
             app:argType="string" />
@@ -56,7 +56,7 @@
         android:id="@+id/withFriendGameFragment"
         android:name="com.example.tictactoe.ui.play_with_friend.WithFriendGameFragment"
         android:label="fragment_with_friend_game"
-        tools:layout="@layout/fragment_with_friend_game" >
+        tools:layout="@layout/fragment_playnig_game" >
         <action
             android:id="@+id/action_withFriendGameFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment"
@@ -94,7 +94,7 @@
         android:id="@+id/onlineGameFragment"
         android:name="com.example.tictactoe.ui.play_online.online_game.OnlineGameFragment"
         android:label="fragment_online_game"
-        tools:layout="@layout/fragment_online_game" >
+        tools:layout="@layout/fragment_playnig_game" >
         <argument
             android:name="friendId"
             app:argType="string" />

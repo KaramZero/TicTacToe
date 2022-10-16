@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick who goes first?"
+        android:text="@string/pick_who_goes_first"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,6 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toStartOf="@+id/o_selection_imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/x" />
@@ -33,8 +32,9 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintStart_toEndOf="@+id/x_selection_imageView"
-        app:layout_constraintTop_toTopOf="@+id/x_selection_imageView"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/o" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

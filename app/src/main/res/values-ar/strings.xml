@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="turn">دور</string>
+    <string name="users_list">قائمة المستخدمين</string>
+    <string name="tic_tac_toe">TIC-TAC-TOE</string>
+    <string name="online">الانترنت</string>
+    <string name="with_friend">مع صديق</string>
+    <string name="with_computer">مع الكومبيوتر</string>
+    <string name="incoming_invitation">دعوة قادمة</string>
+    <string name="pick_who_goes_first">اختار اي شكل تبدأ به؟</string>
+    <string name="select_difficulty_level">اختار مستوي اللعب</string>
+    <string name="your_turn">دورك</string>
+    <string name="pc_turn">دور الكومبيوتر</string>
+    <string name="friend_turn">دور صديقك</string>
+    <string name="you_win">انت كسبت</string>
+    <string name="pc_wins">الكومبيوتر كسب</string>
+    <string name="friend_wins">صديقك كسب</string>
+    <string name="even">تعادل</string>
+    <string name="x_wins">X كسب</string>
+    <string name="o_wins">O كسب</string>
+    <string name="friend_quits">صديقك خرج</string>
+</resources>

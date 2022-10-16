@@ -62,13 +62,18 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
 
                     if (incomingMove != "null"){
                        val move = Move(incomingMove[0].digitToInt(),incomingMove[2].digitToInt())
-                        myBoard[move.row][move.col] = pcChar
-                        _pcMove.postValue(xo[move.row][move.col])
-                        if (XOModel.checkWin(myBoard)) {
-                            _win.postValue(GameState.YOU_LOSE)
-                        } else if (!XOModel.isThereAPlaceToPlay(myBoard)) {
-                            _win.postValue(GameState.EVEN)
+                        if (move.col == 5){
+                            _win.postValue(GameState.FRIEND_QUITS)
+                        }else{
+                            myBoard[move.row][move.col] = pcChar
+                            _pcMove.postValue(xo[move.row][move.col])
+                            if (XOModel.checkWin(myBoard)) {
+                                _win.postValue(GameState.YOU_LOSE)
+                            } else if (!XOModel.isThereAPlaceToPlay(myBoard)) {
+                                _win.postValue(GameState.EVEN)
+                            }
                         }
+
                         db.getReference("userData/${user.uid}").child(UserData.INCOMING_MOVE).setValue("null")
                     }
                 }
@@ -80,10 +85,13 @@ class OnlineGameFragmentViewModel : WithPcGameViewModel() {
         myRef.addValueEventListener(userRecordValueEventListener)
     }
 
+    fun quit(){
+        db.getReference("userData/$friendId").child(UserData.INCOMING_MOVE)
+            .setValue("5 5")
+    }
     fun clearMyMove(){
         _myMove.postValue(null)
     }
-
     fun clearFriendMove(){
         _pcMove.postValue(null)
     }

@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tictactoe.databinding.FragmentOnlineBinding
 import com.example.tictactoe.model.InvitationResponse
-import com.example.tictactoe.model.InvitationResponse.*
+import com.example.tictactoe.model.InvitationResponse.CANCEL
+import com.example.tictactoe.model.InvitationResponse.OK
 import com.example.tictactoe.model.User
 import com.example.tictactoe.ui.dialogs.IncomingInvitationCustomDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -79,11 +79,6 @@ class OnlineFragment : Fragment(), OnlineFragmentCommunicator {
                 viewModel.clearLiveData()
             }
             if (it.whoAccepted != "null") {
-                Toast.makeText(
-                    requireContext(),
-                    "accepted -> ${it.whoAccepted} ",
-                    Toast.LENGTH_SHORT
-                ).show()
                 view.findNavController().navigate(
                     OnlineFragmentDirections.actionOnlineFragmentToOnlineGameFragment(
                         it.whoAccepted,

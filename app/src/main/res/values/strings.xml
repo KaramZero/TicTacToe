@@ -2,6 +2,24 @@
     <string name="app_name">Tic Tac Toe</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="turn">Turn</string>
-    <string name="your_web_client_id">1002471049070-fctkpgl95ootoauphc9ffh14r9g0ot95.apps.googleusercontent.com</string>
+    <string name="turn">\'s Turn</string>
+    <string name="your_web_client_id" translatable="false">1002471049070-fctkpgl95ootoauphc9ffh14r9g0ot95.apps.googleusercontent.com</string>
+    <string name="users_list">Users List</string>
+    <string name="tic_tac_toe">TIC-TAC-TOE</string>
+    <string name="online">Online</string>
+    <string name="with_friend">With Friend</string>
+    <string name="with_computer">With Computer</string>
+    <string name="incoming_invitation">Incoming Invitation</string>
+    <string name="pick_who_goes_first">Pick who goes first?</string>
+    <string name="select_difficulty_level">Select Difficulty Level</string>
+    <string name="your_turn">Your Turn</string>
+    <string name="pc_turn">PC Turn</string>
+    <string name="friend_turn">Friend\'s Turn</string>
+    <string name="you_win">you win</string>
+    <string name="pc_wins">pc wins</string>
+    <string name="even">It\'s Even</string>
+    <string name="friend_wins">friend wins</string>
+    <string name="x_wins">X wins</string>
+    <string name="o_wins">O wins</string>
+    <string name="friend_quits">Your Friend Quits</string>
 </resources>

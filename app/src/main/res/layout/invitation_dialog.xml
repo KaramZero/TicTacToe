@@ -4,14 +4,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/background_corners_white"
-    android:paddingVertical="25dp"
-    android:paddingHorizontal="50dp">
+    android:paddingHorizontal="50dp"
+    android:paddingVertical="25dp">
 
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Incoming Invitation"
+        android:text="@string/incoming_invitation"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,13 +23,14 @@
         android:id="@+id/invitation_user_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user Name"
+
+        android:layout_marginTop="30dp"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/ok_selection_imageView"
         android:layout_width="50dp"

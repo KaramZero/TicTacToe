@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.tictactoe.R
-import com.example.tictactoe.databinding.FragmentWithFriendGameBinding
+import com.example.tictactoe.databinding.FragmentPlaynigGameBinding
 import com.example.tictactoe.game_logics.Music
 import com.example.tictactoe.model.GameState
 import com.example.tictactoe.ui.MyAnimator
@@ -18,7 +18,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WithFriendGameFragment : Fragment() {
-    private var _binding: FragmentWithFriendGameBinding? = null
+    private var _binding: FragmentPlaynigGameBinding? = null
     private val binding get() = _binding!!
 
     private val animator: MyAnimator by inject()
@@ -30,7 +30,7 @@ class WithFriendGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentWithFriendGameBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaynigGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,7 +48,7 @@ class WithFriendGameFragment : Fragment() {
         val args = WithFriendGameFragmentArgs.fromBundle(requireArguments())
         viewModel.initiateMyChar(args.startChar)
 
-        var turn = "Your ${getString(R.string.turn)}"
+        var turn = "${viewModel.myChar} ${getString(R.string.turn)}"
         binding.nowTurnTextView.text = turn
 
         binding.musicImageView.setOnClickListener {
@@ -58,14 +58,14 @@ class WithFriendGameFragment : Fragment() {
         viewModel.myMove.observe(viewLifecycleOwner) {
             it.setImageResource(viewModel.myResourceID)
             animator.animateScale(it)
-            turn = "${viewModel.pcChar}'s ${getString(R.string.turn)}"
+            turn = "${viewModel.pcChar} ${getString(R.string.turn)}"
             binding.nowTurnTextView.text = turn
         }
 
         viewModel.pcMove.observe(viewLifecycleOwner) {
             it.setImageResource(viewModel.pcResourceID)
             animator.animateScale(it)
-            turn = "${viewModel.myChar}'s ${getString(R.string.turn)}"
+            turn = "${viewModel.myChar} ${getString(R.string.turn)}"
             binding.nowTurnTextView.text = turn
         }
 
@@ -78,11 +78,11 @@ class WithFriendGameFragment : Fragment() {
 
     private fun handleGameState(gameState: GameState?, view: View) {
         when (gameState) {
-            GameState.X_WIN -> Toast.makeText(requireContext(), "X wins", Toast.LENGTH_SHORT).show()
+            GameState.X_WIN -> Toast.makeText(requireContext(), getString(R.string.x_wins), Toast.LENGTH_SHORT).show()
 
-            GameState.O_WIN -> Toast.makeText(requireContext(), "O wins", Toast.LENGTH_SHORT).show()
+            GameState.O_WIN -> Toast.makeText(requireContext(), getString(R.string.o_wins), Toast.LENGTH_SHORT).show()
 
-            GameState.EVEN -> Toast.makeText(requireContext(), "It's Even", Toast.LENGTH_SHORT)
+            GameState.EVEN -> Toast.makeText(requireContext(), getString(R.string.even), Toast.LENGTH_SHORT)
                 .show()
 
             else -> {}

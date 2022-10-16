@@ -8,14 +8,11 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import com.example.tictactoe.R
-import com.example.tictactoe.databinding.FragmentWithPcGameBinding
+import com.example.tictactoe.databinding.FragmentPlaynigGameBinding
 import com.example.tictactoe.game_logics.Music
 import com.example.tictactoe.model.GameState
 import com.example.tictactoe.ui.MyAnimator
-import com.example.tictactoe.ui.play_with_pc.WithPcGameFragmentArgs
-import com.example.tictactoe.ui.play_with_pc.WithPcGameFragmentDirections
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,8 +23,9 @@ class OnlineGameFragment : Fragment() {
     private val animator: MyAnimator by inject()
     private val music: Music by inject()
     private val viewModel: OnlineGameFragmentViewModel by viewModel()
+    private var endOfGame = false
 
-    private var _binding: FragmentWithPcGameBinding? = null
+    private var _binding: FragmentPlaynigGameBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -35,7 +33,7 @@ class OnlineGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentWithPcGameBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaynigGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -53,12 +51,12 @@ class OnlineGameFragment : Fragment() {
         val args = OnlineGameFragmentArgs.fromBundle(requireArguments())
         viewModel.initiateMyChar(char = args.playingChar, friendId = args.friendId)
 
-        var turn = "Your ${getString(R.string.turn)}"
+        var turn = getString(R.string.your_turn)
         binding.nowTurnTextView.text = turn
 
         if (args.playingChar == "O") {
             binding.blockingLayout.visibility = View.VISIBLE
-            turn = "PC ${getString(R.string.turn)}"
+            turn = getString(R.string.friend_turn)
             binding.nowTurnTextView.text = turn
         }
 
@@ -72,9 +70,9 @@ class OnlineGameFragment : Fragment() {
                 it.setImageResource(viewModel.myResourceID)
                 animator.animateScale(it)
                 binding.blockingLayout.visibility = View.VISIBLE
-                turn = "PC ${getString(R.string.turn)}"
+                turn = getString(R.string.friend_turn)
                 binding.nowTurnTextView.text = turn
-                viewModel.clearFriendMove()
+                viewModel.clearMyMove()
             }
         }
 
@@ -83,7 +81,7 @@ class OnlineGameFragment : Fragment() {
                 it.setImageResource(viewModel.pcResourceID)
                 animator.animateScale(it)
                 binding.blockingLayout.visibility = View.INVISIBLE
-                turn = "Your ${getString(R.string.turn)}"
+                turn = getString(R.string.your_turn)
                 binding.nowTurnTextView.text = turn
                 viewModel.clearFriendMove()
             }
@@ -91,26 +89,28 @@ class OnlineGameFragment : Fragment() {
 
         viewModel.win.observe(viewLifecycleOwner) {
 
-            handleGameState(gameState = it, view = view)
+            handleGameState(gameState = it)
 
         }
 
     }
 
-    private fun handleGameState(gameState: GameState?, view: View) {
+    private fun handleGameState(gameState: GameState?) {
         when (gameState) {
-            GameState.YOU_WIN -> Toast.makeText(requireContext(), "you win", Toast.LENGTH_SHORT)
+            GameState.YOU_WIN -> Toast.makeText(requireContext(), getString(R.string.you_win), Toast.LENGTH_SHORT)
                 .show()
 
-            GameState.YOU_LOSE -> Toast.makeText(requireContext(), "friend wins", Toast.LENGTH_SHORT)
+            GameState.YOU_LOSE -> Toast.makeText(requireContext(), getString(R.string.friend_wins), Toast.LENGTH_SHORT)
                 .show()
 
-            GameState.EVEN -> Toast.makeText(requireContext(), "It's Even", Toast.LENGTH_SHORT)
+            GameState.EVEN -> Toast.makeText(requireContext(), getString(R.string.even), Toast.LENGTH_SHORT)
+                .show()
+            GameState.FRIEND_QUITS -> Toast.makeText(requireContext(), getString(R.string.friend_quits), Toast.LENGTH_SHORT)
                 .show()
 
             else -> {}
-
         }
+        endOfGame = true
         binding.blockingLayout.visibility = View.INVISIBLE
         requireActivity().onBackPressed()
 
@@ -120,6 +120,7 @@ class OnlineGameFragment : Fragment() {
         viewModel.played(it)
     }
 
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         music.start()
@@ -128,5 +129,7 @@ class OnlineGameFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         music.pause()
+        if (!endOfGame)
+            viewModel.quit()
     }
 }
