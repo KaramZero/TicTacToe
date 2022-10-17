@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tictactoe.MainActivity
+import com.example.tictactoe.R
 import com.example.tictactoe.databinding.ActivitySplashBinding
 
 
@@ -16,6 +17,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+
         Handler(Looper.myLooper()!!).postDelayed({ // This method will be executed once the timer is over
             val i = Intent(this@SplashActivity, MainActivity::class.java)
 
@@ -48,19 +51,24 @@ class SplashActivity : AppCompatActivity() {
             }
         }
 
-        Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1500)
+        Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1000)
         runnableAnim.run()
 
-        binding.logoImageView.setOnClickListener {
-            it.isClickable = false
-            Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1500)
-            runnableAnim.run()
-            Handler(Looper.myLooper()!!).postDelayed({
+        Handler(Looper.myLooper()!!).postDelayed({
                 imgAnim1.visibility = View.GONE
                 imgAnim2.visibility = View.GONE
-                it.isClickable = true
             }, 2500)
-        }
+
+//        binding.logoImageView.setOnClickListener {
+//            it.isClickable = false
+//            Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1500)
+//            runnableAnim.run()
+//            Handler(Looper.myLooper()!!).postDelayed({
+//                imgAnim1.visibility = View.GONE
+//                imgAnim2.visibility = View.GONE
+//                it.isClickable = true
+//            }, 2500)
+//        }
 
     }
 }
