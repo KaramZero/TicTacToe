@@ -24,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
 
             startActivity(i)
             finish()
-        }, 2000)
+        }, 3000)
 
         val imgAnim1 = binding.animationImageView1
         val imgAnim2 = binding.animationImageView2
@@ -51,13 +51,13 @@ class SplashActivity : AppCompatActivity() {
             }
         }
 
-        Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1000)
+       // Handler(Looper.myLooper()!!).postDelayed(runnableAnim,1000)
         runnableAnim.run()
 
         Handler(Looper.myLooper()!!).postDelayed({
                 imgAnim1.visibility = View.GONE
                 imgAnim2.visibility = View.GONE
-            }, 2500)
+            }, 1800)
 
 //        binding.logoImageView.setOnClickListener {
 //            it.isClickable = false

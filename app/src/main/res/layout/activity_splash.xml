@@ -29,15 +29,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/animation_circle2" />
 
-    <ImageView
-        android:id="@+id/logo_imageView"
-        android:layout_width="510dp"
-        android:layout_height="510dp"
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tic_tac_toe_launcher_icon" />
-
+        app:lottie_rawRes="@raw/sphere"
+        app:lottie_autoPlay="true"
+        app:lottie_speed="1.5"
+        app:lottie_loop="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
