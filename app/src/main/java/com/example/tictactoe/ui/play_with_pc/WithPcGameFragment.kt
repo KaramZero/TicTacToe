@@ -25,6 +25,7 @@ class WithPcGameFragment : Fragment() {
     private val animator: MyAnimator by inject()
     private val viewModel: WithPcGameViewModel by viewModel()
 
+    private var canPlay = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +60,6 @@ class WithPcGameFragment : Fragment() {
             if (it != null) {
                 it.setImageResource(viewModel.myResourceID)
                 animator.animateScale(it)
-                binding.blockingLayout.visibility = View.VISIBLE
                 turn = getString(R.string.pc_turn)
                 binding.nowTurnTextView.text = turn
             }
@@ -69,10 +69,10 @@ class WithPcGameFragment : Fragment() {
             if (it != null) {
                 it.setImageResource(viewModel.pcResourceID)
                 animator.animateScale(it)
-                binding.blockingLayout.visibility = View.INVISIBLE
                 turn = getString(R.string.your_turn)
                 binding.nowTurnTextView.text = turn
             }
+            canPlay = true
         }
 
         viewModel.win.observe(viewLifecycleOwner) {
@@ -114,13 +114,15 @@ class WithPcGameFragment : Fragment() {
 
             else -> {}
         }
-        binding.blockingLayout.visibility = View.INVISIBLE
         view.findNavController()
             .navigate(WithPcGameFragmentDirections.actionGameFragmentToWelcomeFragment())
     }
 
     private val onButtonClickedListener = OnClickListener {
-        viewModel.played(it)
+        if (canPlay){
+            canPlay = false
+            viewModel.played(it)
+        }
     }
 
 }

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-open class WithPcGameViewModel constructor(private val music:Music) : ViewModel() {
+open class WithPcGameViewModel constructor(private val music: Music) : ViewModel() {
 
     protected val myBoard = XOModel.getPlayingBoard()
 
@@ -41,8 +41,8 @@ open class WithPcGameViewModel constructor(private val music:Music) : ViewModel(
     protected var _pcResourceID = R.drawable.o
     val pcResourceID get() = _pcResourceID
 
-    protected val _pcMove = MutableLiveData<ImageView>()
-    val pcMove: LiveData<ImageView> = _pcMove
+    protected val _pcMove = MutableLiveData<ImageView?>()
+    val pcMove: LiveData<ImageView?> = _pcMove
 
     protected val _myMove = MutableLiveData<ImageView>()
     val myMove: LiveData<ImageView> = _myMove
@@ -53,6 +53,7 @@ open class WithPcGameViewModel constructor(private val music:Music) : ViewModel(
     init {
         music.start()
     }
+
     fun initiateMyChar(char: String, level: Int) {
         if (char == "O") {
             myChar = 'O'
@@ -97,54 +98,58 @@ open class WithPcGameViewModel constructor(private val music:Music) : ViewModel(
     }
 
     open fun played(view: View) {
+        viewModelScope.launch(Dispatchers.Main){
+            val myMove = getMyMove(view)
+            if (myBoard[myMove.row][myMove.col] == '_') {
 
-        val myMove = getMyMove(view)
+                _myMove.postValue(view as ImageView?)
+                myBoard[myMove.row][myMove.col] = myChar
+                myTurn = false
 
-        if (myBoard[myMove.row][myMove.col] == '_') {
-
-            _myMove.postValue(view as ImageView?)
-            myBoard[myMove.row][myMove.col] = myChar
-            myTurn = false
-
-            if (XOModel.checkWin(myBoard)) {
-                _win.postValue(GameState.YOU_WIN)
-            } else if (!XOModel.isThereAPlaceToPlay(myBoard)) {
-                _win.postValue(GameState.EVEN)
-            } else {
-                viewModelScope.launch(Dispatchers.IO) {
-                    withContext(Dispatchers.IO) {
-                        Thread.sleep(500)
+                if (XOModel.checkWin(myBoard)) {
+                    _win.postValue(GameState.YOU_WIN)
+                } else if (!XOModel.isThereAPlaceToPlay(myBoard)) {
+                    _win.postValue(GameState.EVEN)
+                } else {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
+                            Thread.sleep(500)
+                        }
+                        makePcMove()
+                        myTurn = true
                     }
-                    makePcMove()
-                    myTurn = true
                 }
+            } else {
+                _pcMove.postValue(null)
             }
         }
     }
 
-    fun reDraw(){
-        for (i in 0..2){
-            for (j in 0..2){
-                if (myBoard[i][j] == myChar){
+    fun reDraw() {
+        for (i in 0..2) {
+            for (j in 0..2) {
+                if (myBoard[i][j] == myChar) {
                     xo[i][j].setImageResource(myResourceID)
-                }else if (myBoard[i][j] == pcChar){
+                } else if (myBoard[i][j] == pcChar) {
                     xo[i][j].setImageResource(pcResourceID)
                 }
             }
         }
-        if (myTurn){
+        if (myTurn) {
             _pcMove.postValue(_pcMove.value)
-        }else{
+        } else {
             _myMove.postValue(_myMove.value)
         }
     }
 
-    fun setBackgroundResource(view: View){
+    fun setBackgroundResource(view: View) {
         music.setBackgroundResource(view)
     }
-    fun switchPlayingState(view :View){
+
+    fun switchPlayingState(view: View) {
         music.switchPlayingState(view)
     }
+
     private fun makePcMove() {
         val pcMove = pc.findMove(myBoard, pcChar)
         myBoard[pcMove.row][pcMove.col] = pcChar

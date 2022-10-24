@@ -23,6 +23,9 @@ class OnlineGameFragment : Fragment() {
     private val viewModel: OnlineGameFragmentViewModel by viewModel()
     private var endOfGame = false
 
+    private var canPlay = true
+
+
     private var outState: Bundle? = null
 
     private var _binding: FragmentPlayingGameBinding? = null
@@ -67,7 +70,6 @@ class OnlineGameFragment : Fragment() {
                 it.setImageResource(viewModel.myResourceID)
                 animator.animateScale(it)
             }
-            binding.blockingLayout.visibility = View.VISIBLE
             turn = getString(R.string.friend_turn)
             binding.nowTurnTextView.text = turn
         }
@@ -77,7 +79,7 @@ class OnlineGameFragment : Fragment() {
                 it.setImageResource(viewModel.pcResourceID)
                 animator.animateScale(it)
             }
-            binding.blockingLayout.visibility = View.INVISIBLE
+            canPlay = true
             turn = getString(R.string.your_turn)
             binding.nowTurnTextView.text = turn
         }
@@ -94,7 +96,7 @@ class OnlineGameFragment : Fragment() {
             binding.nowTurnTextView.text = turn
 
             if (args.playingChar == "O") {
-                binding.blockingLayout.visibility = View.VISIBLE
+                canPlay = false
                 turn = getString(R.string.friend_turn)
                 binding.nowTurnTextView.text = turn
             }
@@ -134,13 +136,15 @@ class OnlineGameFragment : Fragment() {
             else -> {}
         }
         endOfGame = true
-        binding.blockingLayout.visibility = View.INVISIBLE
         requireActivity().onBackPressed()
 
     }
 
     private val onButtonClickedListener = OnClickListener {
-        viewModel.played(it)
+        if (canPlay){
+            canPlay = false
+            viewModel.played(it)
+        }
     }
 
 
